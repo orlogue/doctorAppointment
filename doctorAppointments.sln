@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "doctorAppointments", "doctorAppointments\doctorAppointments.csproj", "{3BF75DF7-1F70-4C9B-8579-99B0CBCBA748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain", "domain\domain.csproj", "{641CFD73-FEA2-4E67-B958-7060B5929851}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BF75DF7-1F70-4C9B-8579-99B0CBCBA748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BF75DF7-1F70-4C9B-8579-99B0CBCBA748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BF75DF7-1F70-4C9B-8579-99B0CBCBA748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BF75DF7-1F70-4C9B-8579-99B0CBCBA748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{641CFD73-FEA2-4E67-B958-7060B5929851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{641CFD73-FEA2-4E67-B958-7060B5929851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{641CFD73-FEA2-4E67-B958-7060B5929851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{641CFD73-FEA2-4E67-B958-7060B5929851}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
