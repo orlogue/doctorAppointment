@@ -1,4 +1,4 @@
-namespace domain;
+namespace domain.Classes;
 
 public class Doctor
 {
