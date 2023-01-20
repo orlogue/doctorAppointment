@@ -7,7 +7,7 @@ public class UserServiceTests
 
     public UserServiceTests()
     {
-        // Используем библиотеку Moq, чтобы подготавливать тестовые данные
+        // спользуем библиотеку Moq, чтобы подготавливать тестовые данные
         // Мы отдаем реализацию интерфейса, но сервису без разницы, что там, ему важно, что удовлетворяется интерфейсу
         // Таким образом мы подкидываем нужные данные для тестовых сценариев, другими словами, "мокаем" (mock) репозиторий 
         _userRepositoryMock = new Mock<IUserRepository>();
@@ -19,6 +19,7 @@ public class UserServiceTests
     {
         var res = _userService.Register(new User());
 
+        var resq = _userService.Register(new User());
         Assert.True(res.IsFailure);
         Assert.Equal("Invalid username", res.Error);
     }
