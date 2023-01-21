@@ -4,7 +4,7 @@ namespace domain.Classes;
 
 public class User
 {
-    public int Id;
+    public Int64 Id;
     public string PhoneNumber;
     public string FullName;
     public Role Role;
@@ -14,7 +14,7 @@ public class User
 
     public User() : this(0, "", "", Role.Patient, "", "") {}
     
-    public User(int id, string phoneNumber, string fullName, Role role,
+    public User(Int64 id, string phoneNumber, string fullName, Role role,
         string userName, string password)
     {
         Id = id;

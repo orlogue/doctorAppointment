@@ -1,4 +1,4 @@
-﻿namespace UnitTests;
+﻿namespace UnitTests.ServicesTests;
 
 public class UserServiceTests
 {
@@ -12,7 +12,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void Register_ShouldFail()
+    public void Register_Fail()
     {
         var res = _userService.Register(new User());
 
@@ -21,7 +21,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void Register_AlreadyExists_ShouldFail()
+    public void Register_AlreadyExists_Fail()
     {
         _userRepositoryMock.Setup(repository => repository.DoesUserExist(
             It.IsAny<string>()))
@@ -35,7 +35,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void Register_Error_ShouldFail()
+    public void Register_Error_Fail()
     {
         _userRepositoryMock.Setup(repository => repository.DoesUserExist(
             It.IsAny<string>()))
@@ -52,7 +52,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void GetUserByLogin_LoginIsEmptyOrNull_ShouldFail()
+    public void GetUserByLogin_LoginIsEmptyOrNull_Fail()
     {
         var res = _userService.GetUserByLogin(string.Empty);
 
@@ -61,7 +61,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void GetUserByLogin_NotFound_ShouldFail()
+    public void GetUserByLogin_NotFound_Fail()
     {
         _userRepositoryMock.Setup(repository => repository.GetUserByLogin(
             It.IsAny<string>()))
@@ -74,7 +74,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void UserDoesNotExist_EmptyUsername_ShouldFail()
+    public void UserDoesNotExist_EmptyUsername_Fail()
     {
         _userRepositoryMock.Setup(repository => repository.DoesUserExist(
             It.IsAny<string>()))
@@ -87,7 +87,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void UserDoesNotExist_NotFound_ShouldFail()
+    public void UserDoesNotExist_NotFound_Fail()
     {
         _userRepositoryMock.Setup(repository => repository.DoesUserExist(
             It.IsAny<string>()))

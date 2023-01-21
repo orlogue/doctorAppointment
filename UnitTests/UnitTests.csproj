@@ -26,4 +26,12 @@
     <ProjectReference Include="..\domain\domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="ClassesTests\" />
+    <None Remove="ServicesTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ClassesTests\" />
+    <Folder Include="ServicesTests\" />
+  </ItemGroup>
 </Project>

@@ -1,9 +1,18 @@
-﻿namespace UnitTests;
+﻿namespace UnitTests.ClassesTests;
 
 public class UserTests
 {
     [Fact]
-    public void IdError_ShouldFail()
+    public void CreateUser_Success()
+    {
+        var user = new User(1, "a", "a", Role.Patient, "a", "a");
+        var res = user.IsValid();
+
+        Assert.True(res.Success);
+    }
+
+    [Fact]
+    public void IdError_Fail()
     {
         var user = new User(-1, "a", "a", Role.Patient, "a", "a");
         var res = user.IsValid();
@@ -13,7 +22,7 @@ public class UserTests
     }
 
     [Fact]
-    public void UsernameError_ShouldFail()
+    public void UsernameError_Fail()
     {
         var user = new User(1, "a", "a", Role.Patient, "", "a");
         var res = user.IsValid();
@@ -23,7 +32,7 @@ public class UserTests
     }
 
     [Fact]
-    public void PasswordError_ShouldFail()
+    public void PasswordError_Fail()
     {
         var user = new User(1, "a", "a", Role.Patient, "a", "");
         var res = user.IsValid();
@@ -33,7 +42,7 @@ public class UserTests
     }
 
     [Fact]
-    public void PhoneNumberError_ShouldFail()
+    public void PhoneNumberError_Fail()
     {
         var user = new User(1, "", "a", Role.Patient, "a", "a");
         var res = user.IsValid();
@@ -43,7 +52,7 @@ public class UserTests
     }
 
     [Fact]
-    public void FullNameError_ShouldFail()
+    public void FullNameError_Fail()
     {
         var user = new User(1, "a", "", Role.Patient, "a", "a");
         var res = user.IsValid();
