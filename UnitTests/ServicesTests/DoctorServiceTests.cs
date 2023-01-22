@@ -20,7 +20,7 @@ public class DoctorServiceTests
                 new Doctor(1, "aa", new Specialty(0, "a"))
             };
         IEnumerable<Doctor> d = doctors;
-        _doctorRepositoryMock.Setup(rep => rep.GetAllDoctors()).Returns(() => d);
+        _doctorRepositoryMock.Setup(rep => rep.GetItemsList()).Returns(() => d);
 
         Assert.True(_doctorService.GetAllDoctors().Success);
     }
@@ -28,30 +28,21 @@ public class DoctorServiceTests
     [Fact]
     public void FindDoctorById_Success()
     {
-        _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
+        _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
             .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
 
-        Assert.True(_doctorService.FindDoctor(0).Success);
-    }
-
-    [Fact]
-    public void FindDoctorById_InvalidId_Fail()
-    {
-        var res = _doctorService.FindDoctor(-1);
-
-        Assert.True(res.IsFailure);
-        Assert.Equal("Invalid id", res.Error);
+        Assert.True(_doctorService.GetItem(0).Success);
     }
 
     [Fact]
     public void FindDoctorById_Fail()
     {
-        _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
+        _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
             .Returns(() => null);
 
-        var res = _doctorService.FindDoctor(0);
+        var res = _doctorService.GetItem(0);
 
         Assert.True(res.IsFailure);
         Assert.Equal("Unable to find doctor", res.Error);
@@ -131,7 +122,7 @@ public class DoctorServiceTests
     [Fact]
     public void DeleteDoctor_Success()
     {
-        _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
+        _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
             .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
         _doctorRepositoryMock.Setup(rep => rep.Delete(
@@ -153,7 +144,7 @@ public class DoctorServiceTests
     [Fact]
     public void DeleteDoctor_DoctorNotFound_Fail()
     {
-        _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
+        _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
             .Returns(() => null);
 
@@ -166,7 +157,7 @@ public class DoctorServiceTests
     [Fact]
     public void DeleteDoctor_DeleteError_Fail()
     {
-        _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
+        _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
             .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
         _doctorRepositoryMock.Setup(rep => rep.Delete(

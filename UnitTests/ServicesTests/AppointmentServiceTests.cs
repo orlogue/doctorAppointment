@@ -20,12 +20,12 @@ public class AppointmentServiceTests
         _appointmentRepositoryMock.Setup(rep => rep.GetAppointments(
             It.IsAny<int>()))
             .Returns(() => appointments);
-        _appointmentRepositoryMock.Setup(rep => rep.SaveAppointment(
+        _appointmentRepositoryMock.Setup(rep => rep.Create(
             It.IsAny<Appointment>()))
             .Returns(() => true);
 
         var appointment = new Appointment();
-        var schedule = new Schedule(0, DateTime.MinValue, DateTime.MaxValue);
+        var schedule = new Schedule(0, 0, DateTime.MinValue, DateTime.MaxValue);
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
         Assert.True(res.Success);
@@ -34,8 +34,8 @@ public class AppointmentServiceTests
     [Fact]
     public void SaveAppointment_InvalidSchedule_Fail()
     {
-        var appointment = new Appointment(0, 0, DateTime.MinValue, DateTime.MinValue);
-        var schedule = new Schedule(-1, DateTime.MinValue, DateTime.MinValue);
+        var appointment = new Appointment(0, 0, 0, DateTime.MinValue, DateTime.MinValue);
+        var schedule = new Schedule(-1, 0, DateTime.MinValue, DateTime.MinValue);
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
         Assert.True(res.IsFailure);
@@ -45,7 +45,7 @@ public class AppointmentServiceTests
     [Fact]
     public void SaveAppointment_InvalidAppointment_Fail()
     {
-        var appointment = new Appointment(-1, -1, DateTime.MinValue, DateTime.MinValue);
+        var appointment = new Appointment(0, -1, -1, DateTime.MinValue, DateTime.MinValue);
         var schedule = new Schedule();
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
@@ -56,8 +56,8 @@ public class AppointmentServiceTests
     [Fact]
     public void SaveAppointment_InvalidTime_Fail()
     {
-        var appointment = new Appointment(0, 0, DateTime.MaxValue, DateTime.MaxValue);
-        var schedule = new Schedule(0, DateTime.MinValue, DateTime.MinValue);
+        var appointment = new Appointment(0, 0, 0, DateTime.MaxValue, DateTime.MaxValue);
+        var schedule = new Schedule(0, 0, DateTime.MinValue, DateTime.MinValue);
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
         Assert.True(res.IsFailure);
@@ -69,15 +69,15 @@ public class AppointmentServiceTests
     {
         List<Appointment> apps = new()
             {
-                new Appointment(0, 0, DateTime.MinValue, DateTime.Parse("2023-01-10")),
-                new Appointment(0, 0, DateTime.Parse("2023-01-10"), DateTime.MaxValue)
+                new Appointment(0, 0, 0, DateTime.MinValue, DateTime.Parse("2023-01-10")),
+                new Appointment(0, 0, 0, DateTime.Parse("2023-01-10"), DateTime.MaxValue)
             };
         _appointmentRepositoryMock.Setup(rep => rep.GetAppointments(
             It.IsAny<int>()))
             .Returns(() => apps);
 
-        var appointment = new Appointment(0, 0, DateTime.Parse("2023-01-01"), DateTime.Parse("2023-02-01"));
-        var schedule = new Schedule(0, DateTime.MinValue, DateTime.MaxValue);
+        var appointment = new Appointment(0, 0, 0, DateTime.Parse("2023-01-01"), DateTime.Parse("2023-02-01"));
+        var schedule = new Schedule(0, 0, DateTime.MinValue, DateTime.MaxValue);
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
         Assert.True(res.IsFailure);
@@ -91,12 +91,12 @@ public class AppointmentServiceTests
         _appointmentRepositoryMock.Setup(rep => rep.GetAppointments(
             It.IsAny<int>()))
             .Returns(() => apps);
-        _appointmentRepositoryMock.Setup(rep => rep.SaveAppointment(
+        _appointmentRepositoryMock.Setup(rep => rep.Create(
             It.IsAny<Appointment>()))
             .Returns(() => false);
 
         var appointment = new Appointment();
-        var schedule = new Schedule(0, DateTime.MinValue, DateTime.MaxValue);
+        var schedule = new Schedule(0, 0, DateTime.MinValue, DateTime.MaxValue);
         var res = _appointmentService.SaveAppointment(schedule, appointment);
 
         Assert.True(res.IsFailure);
@@ -116,12 +116,12 @@ public class AppointmentServiceTests
     [Fact]
     public void GetFreeAppointment_Success()
     {
-        List<Appointment> appointments = new()
+        List<DateTime> appointments = new()
             {
-                new Appointment(),
-                new Appointment()
+                new DateTime(),
+                new DateTime()
             };
-        IEnumerable<Appointment> a = appointments;
+        IEnumerable<DateTime> a = appointments;
         _appointmentRepositoryMock.Setup(
             rep => rep.GetFreeAppointments(It.IsAny<Specialty>())).Returns(() => a);
 

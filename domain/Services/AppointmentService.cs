@@ -41,17 +41,17 @@ public class AppointmentService
                 return Result.Fail<Appointment>("This time already taken");
         }
 
-        return _db.SaveAppointment(appointment) ? Result.Ok(appointment) :
+        return _db.Create(appointment) ? Result.Ok(appointment) :
             Result.Fail<Appointment>("Unable to save the appointment");
 
     }
 
-    public Result<IEnumerable<Appointment>> GetFreeAppointments(Specialty
+    public Result<IEnumerable<DateTime>> GetFreeAppointments(Specialty
         specialty)
     {
         var result = specialty.IsValid();
         if (result.IsFailure)
-            return Result.Fail<IEnumerable<Appointment>>
+            return Result.Fail<IEnumerable<DateTime>>
                 ("Invalid specialization: " + result.Error.ToLower());
 
         return Result.Ok(_db.GetFreeAppointments(specialty));

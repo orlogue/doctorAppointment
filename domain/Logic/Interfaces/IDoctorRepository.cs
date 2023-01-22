@@ -4,9 +4,6 @@ namespace domain.Logic.Interfaces;
 
 public interface IDoctorRepository : IRepository<Doctor>
 {
-    IEnumerable<Doctor> GetAllDoctors();
-    Doctor? FindDoctor(int id);
+    IEnumerable<Doctor?> FindDoctorsBySpecialty(Specialty specialty);
     Doctor? FindDoctor(Specialty specialty);
-    new bool Create(Doctor doctor);
-    new bool Delete(int id);
 }

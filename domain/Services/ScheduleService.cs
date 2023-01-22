@@ -17,34 +17,26 @@ public class ScheduleService
 			return Result.Fail<IEnumerable<Schedule>>("Invalid doctor: "
 				+ doctorResult.Error.ToLower());
 
-		return Result.Ok(_db.GetSchedule(doctor));
+		return Result.Ok(_db.GetScheduleByDoctor(doctor));
 	}
 
-	public Result CreateSchedule(Doctor doctor, Schedule schedule)
+	public Result CreateSchedule(Schedule schedule)
 	{
-		var doctorResult = doctor.IsValid();
-        if (doctorResult.IsFailure)
-            return Result.Fail("Invalid doctor: " + doctorResult.Error.ToLower());
-
         var scheduleResult = schedule.IsValid();
         if (scheduleResult.IsFailure)
             return Result.Fail("Invalid schedule: " + scheduleResult.Error.ToLower());
 
-		return _db.CreateSchedule(doctor, schedule) ? Result.Ok()
+		return _db.Create(schedule) ? Result.Ok()
 			: Result.Fail("Unable to create schedule");
     }
 
-    public Result UpdateSchedule(Doctor doctor, Schedule schedule)
+    public Result UpdateSchedule(Schedule schedule)
     {
-        var doctorResult = doctor.IsValid();
-        if (doctorResult.IsFailure)
-            return Result.Fail("Invalid doctor: " + doctorResult.Error);
-
         var scheduleResult = schedule.IsValid();
         if (scheduleResult.IsFailure)
             return Result.Fail("Invalid schedule: " + scheduleResult.Error);
 
-        return _db.UpdateSchedule(doctor, schedule) ? Result.Ok(schedule)
+        return _db.Update(schedule) ? Result.Ok(schedule)
             : Result.Fail<Schedule>("Unable to update schedule");
     }
 }

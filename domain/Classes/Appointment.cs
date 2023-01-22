@@ -3,16 +3,18 @@ namespace domain.Classes;
 
 public class Appointment
 {
+    public Int64 Id;
     public Int64 PatientId;
     public int DoctorId;
     public DateTime StartTime;
     public DateTime EndTime;
 
-    public Appointment() : this(0, 0, DateTime.MinValue, DateTime.MinValue) {}
+    public Appointment() : this(0, 0, 0, DateTime.MinValue, DateTime.MinValue) {}
 
-    public Appointment(Int64 patientId, int doctorId, DateTime startTime,
+    public Appointment(Int64 id, Int64 patientId, int doctorId, DateTime startTime,
         DateTime endTime)
     {
+        Id = id;
         PatientId = patientId;
         DoctorId = doctorId;
         StartTime = startTime;
@@ -21,6 +23,9 @@ public class Appointment
 
     public Result IsValid()
     {
+        if (Id < 0)
+            return Result.Fail("Invalid id");
+
         if (PatientId < 0)
             return Result.Fail("Invalid patient id");
         

@@ -6,5 +6,4 @@ public interface IUserRepository : IRepository<User>
 {
     User? GetUserByLogin(string login);
     bool DoesUserExist(string username);
-    new bool Create(User user);
 }

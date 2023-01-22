@@ -12,17 +12,18 @@ public class DoctorService
 
     public Result<IEnumerable<Doctor>> GetAllDoctors()
     {
-        return Result.Ok(_db.GetAllDoctors());
+        return Result.Ok(_db.GetItemsList());
     }
 
-	public Result<Doctor> FindDoctor(int id)
+	public Result<IEnumerable<Doctor?>> FindDoctorsBySpecialty(Specialty specialty)
 	{
-		if (id < 0)
-			return Result.Fail<Doctor>("Invalid id");
+		var specialtyRes = specialty.IsValid();
+		if (specialtyRes.IsFailure)
+			return Result.Fail<IEnumerable<Doctor?>>("Invalid specialty: " + specialtyRes.Error);
 
-		var res = _db.FindDoctor(id);
+		var res = _db.FindDoctorsBySpecialty(specialty);
 		return res is not null ? Result.Ok(res)
-			: Result.Fail<Doctor>("Unable to find doctor");
+			: Result.Fail<IEnumerable<Doctor?>>("Unable to find doctor");
 	}
 
     public Result<Doctor> FindDoctor(Specialty specialty)
@@ -49,12 +50,18 @@ public class DoctorService
 
     public Result<Doctor> Delete(int id)
 	{
-        var result = FindDoctor(id);
-        if (result.IsFailure)
-            return Result.Fail<Doctor>(result.Error);
+        var result = _db.GetItem(id);
+        if (result == null)
+            return Result.Fail<Doctor>("Unable to find doctor");
 
-		return _db.Delete(id) ? result :
+		return _db.Delete(id) ? Result.Ok(result) :
 			Result.Fail<Doctor>("Unable to delete doctor");
 	}
 
+    public Result<Doctor> GetItem(int id)
+    {
+        var result = _db.GetItem(id);
+        return result != null ? Result.Ok(result) :
+            Result.Fail<Doctor>("Unable to find doctor");
+    }
 }

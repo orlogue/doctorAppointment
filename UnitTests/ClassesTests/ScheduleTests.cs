@@ -5,15 +5,25 @@ public class ScheduleTests
 	[Fact]
 	public void CreateSchedule_Success()
 	{
-		var schedule = new Schedule(0, DateTime.MinValue, DateTime.MinValue);
+		var schedule = new Schedule(0, 0, DateTime.MinValue, DateTime.MinValue);
 
 		Assert.True(schedule.IsValid().Success);
 	}
 
     [Fact]
+    public void IdError_Fail()
+    {
+        var schedule = new Schedule(-1, 0, DateTime.MinValue, DateTime.MinValue);
+        var res = schedule.IsValid();
+
+        Assert.True(res.IsFailure);
+        Assert.Equal("Invalid id", res.Error);
+    }
+
+    [Fact]
     public void DoctorIdError_Fail()
     {
-        var schedule = new Schedule(-1, DateTime.MinValue, DateTime.MinValue);
+        var schedule = new Schedule(0, -1, DateTime.MinValue, DateTime.MinValue);
         var res = schedule.IsValid();
 
         Assert.True(res.IsFailure);
@@ -23,7 +33,7 @@ public class ScheduleTests
     [Fact]
     public void DateTimeError_Fail()
     {
-        var schedule = new Schedule(0, DateTime.MaxValue, DateTime.MinValue);
+        var schedule = new Schedule(0, 0, DateTime.MaxValue, DateTime.MinValue);
         var res = schedule.IsValid();
 
         Assert.True(res.IsFailure);
