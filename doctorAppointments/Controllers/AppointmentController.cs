@@ -2,7 +2,7 @@
 
 using domain.Services;
 using domain.Classes;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace doctorAppointments.Controllers;
 
@@ -24,24 +24,29 @@ public class AppointmentController : ControllerBase
         _doctorService = doctorService;
     }
 
+    [Authorize]
     [HttpPost("save")]
-    public IActionResult SaveAppointment(Appointment appointment)
+    public async Task<IActionResult> SaveAppointment(Appointment appointment)
     {
-        var doc = _doctorService.GetItem(appointment.DoctorId);
+        var doc = await _doctorService.GetItem(appointment.DoctorId);
         if (doc.IsFailure)
             return Problem(statusCode: 400, detail: doc.Error);
 
-        var schedule = _scheduleService.GetSchedule(doc.Value).Value.First(
-            it => it.WorkdayStartTime.Date == appointment.StartTime.Date);
-        var appointemnt = _appointmentService.SaveAppointment(schedule, appointment);
+        var schedule = (await _scheduleService.GetSchedule(doc.Value)).Value.ToList()
+            .FirstOrDefault(
+            it =>
+            it.WorkdayStartTime <= appointment.StartTime &&
+            it.WorkdayEndTime >= appointment.EndTime);
+        var appointemnt = await _appointmentService.SaveAppointment(schedule, appointment);
         if (appointemnt.IsFailure) return Problem(statusCode: 400, detail: appointemnt.Error);
         return Ok(appointemnt.Value);
     }
 
+    [Authorize]
     [HttpPost("get")]
-    public IActionResult GetAppointment(Specialty specialty)
+    public async Task<IActionResult> GetAppointment(Specialty specialty)
     {
-        var appointemnt = _appointmentService.GetFreeAppointments(specialty);
+        var appointemnt = await _appointmentService.GetFreeAppointments(specialty);
         if (appointemnt.IsFailure) return Problem(statusCode: 400, detail: appointemnt.Error);
         return Ok(appointemnt.Value);
     }

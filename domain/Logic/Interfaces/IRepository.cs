@@ -2,10 +2,10 @@ namespace domain.Logic.Interfaces;
 
 public interface IRepository<T> where T : class
 {
-    IEnumerable<T> GetItemsList();
-    T? GetItem(int id);
-    bool Create(T item);
-    bool Update(T item);
-    bool Delete(int id);
+    Task<IEnumerable<T>> GetItemsList();
+    Task<T?> GetItem(int id);
+    Task<bool> Create(T item);
+    Task<bool> Update(T item);
+    Task<bool> Delete(int id);
     void Save();
 }

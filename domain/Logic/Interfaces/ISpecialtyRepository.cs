@@ -5,5 +5,5 @@ namespace domain.Logic.Interfaces;
 
 public interface ISpecialtyRepository : IRepository<Specialty>
 {
-	public Specialty? GetByName(string name);
+	Task<Specialty?> GetByName(string name);
 }

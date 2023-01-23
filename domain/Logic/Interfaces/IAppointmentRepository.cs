@@ -4,6 +4,6 @@ namespace domain.Logic.Interfaces;
 
 public interface IAppointmentRepository : IRepository<Appointment>
 {
-    IEnumerable<DateTime> GetFreeAppointments(Specialty specialization);
-    IEnumerable<Appointment> GetAppointments(int doctorId);
+    Task<IEnumerable<DateTime>> GetFreeAppointments(Specialty specialization);
+    Task<IEnumerable<Appointment>> GetAppointments(int doctorId);
 }

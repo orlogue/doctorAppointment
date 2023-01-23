@@ -4,6 +4,6 @@ namespace domain.Logic.Interfaces;
 
 public interface IDoctorRepository : IRepository<Doctor>
 {
-    IEnumerable<Doctor?> FindDoctorsBySpecialty(int specialtyId);
-    Doctor? FindDoctor(int specialtyId);
+    Task<IEnumerable<Doctor?>> FindDoctorsBySpecialty(int specialtyId);
+    Task<Doctor?> FindDoctor(int specialtyId);
 }

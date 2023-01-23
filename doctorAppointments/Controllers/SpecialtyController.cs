@@ -4,6 +4,7 @@ using database.Repositories;
 using domain.Logic.Interfaces;
 using doctorAppointments.Views;
 using domain.Classes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace doctorAppointments.Controllers;
 
@@ -16,20 +17,21 @@ public class SpecialtyController : ControllerBase
     public SpecialtyController(ISpecialtyRepository service) => _service = service;
 
     [HttpGet("get_all")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return Ok(_service.GetItemsList());
+        return Ok(await _service.GetItemsList());
     }
 
     [HttpGet("get_by_name")]
-    public IActionResult GetByName(string name)
+    public async Task<IActionResult> GetByName(string name)
     {
-        var res = _service.GetByName(name);
+        var res = await _service.GetByName(name);
         return res != null ? Ok(res) : Problem(statusCode: 400, detail: "Not Found");
     }
 
+    [Authorize]
     [HttpPost("add")]
-    public IActionResult AddSpecialty(string name)
+    public async Task<IActionResult> AddSpecialty(string name)
     {
         Specialty specialty = new(0, name);
 
@@ -37,15 +39,15 @@ public class SpecialtyController : ControllerBase
         if (res.IsFailure)
             return Problem(statusCode: 400, detail: res.Error);
 
-        var created = _service.Create(specialty);
-        return created ? Ok(_service.GetByName(name)) :
+        var created = await _service.Create(specialty);
+        return created ? Ok(await _service.GetByName(name)) :
             Problem(statusCode: 404, detail: "Could not create specialty");
     }
 
     [HttpDelete("delete")]
-    public IActionResult DeleteSpecialty(int id)
+    public async Task<IActionResult> DeleteSpecialty(int id)
     {
-        var res = _service.Delete(id);
+        var res = await _service.Delete(id);
         return res ? Ok() : Problem(statusCode: 404, detail: "Could not delete specialty");
     }
 }

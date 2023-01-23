@@ -17,51 +17,56 @@ public class DoctorRepository : IDoctorRepository
         _dbSet = context.Doctors;
     }
 
-    public Doctor? GetItem(int id) =>
-        _dbSet
-            .AsNoTracking()
-            .FirstOrDefault(item => item.Id == id)
-            ?.ToDomain();
-
-    public IEnumerable<Doctor> GetItemsList() =>
-        _dbSet.AsNoTracking().Select(item => item.ToDomain());
-
-    public bool Create(Doctor item)
+    public async Task<Doctor?> GetItem(int id)
     {
-        _dbSet.Add(item.ToModel());
-        Save();
+        var doctor = await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == id);
+        return doctor?.ToDomain();
+    }
+    public async Task<IEnumerable<Doctor>> GetItemsList() =>
+        await _dbSet.AsNoTracking().Select(item => item.ToDomain()).ToListAsync();
+
+    public async Task<bool> Create(Doctor item)
+    {
+        await _dbSet.AddAsync(item.ToModel());
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Update(Doctor item)
+    public async Task<bool> Update(Doctor item)
     {
         _dbSet.Update(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var item = GetItem(id);
+        var item = await GetItem(id);
         if (item == default)
             return false;
 
         _dbSet.Remove(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public void Save()
+    public async void Save()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public IEnumerable<Doctor?> FindDoctorsBySpecialty(int specialtyId) =>
-        _dbSet
+    public async Task<IEnumerable<Doctor?>> FindDoctorsBySpecialty(int specialtyId) =>
+        await _dbSet
             .AsNoTracking()
             .Where(doc => doc.SpecialtyId == specialtyId)
-            .Select(it => it.ToDomain());
+            .Select(it => it.ToDomain())
+            .ToListAsync();
 
-    public Doctor? FindDoctor(int specialtyId) =>
-        _dbSet.FirstOrDefault(doc => doc.SpecialtyId == specialtyId)?.ToDomain();
+    public async Task<Doctor?> FindDoctor(int specialtyId)
+    {
+        var doctor = await _dbSet.FirstOrDefaultAsync(doc => doc.SpecialtyId == specialtyId);
+        return doctor?.ToDomain();
+    }
 }

@@ -18,63 +18,72 @@ public class AppointmentRepository : IAppointmentRepository
         _dbSet = context.Appointments;
     }
 
-    public Appointment? GetItem(int id) =>
-        _dbSet
-            .AsNoTracking()
-            .FirstOrDefault(item => item.Id == id)
-            ?.ToDomain();
-
-    public IEnumerable<Appointment> GetItemsList() =>
-        _dbSet
-            .AsNoTracking()
-            .Select(item => item.ToDomain());
-
-    public bool Create(Appointment item)
+    public async Task<Appointment?> GetItem(int id)
     {
-        _dbSet.Add(item.ToModel());
-        Save();
+        var appointemnt = await
+            _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == id);
+        return appointemnt?.ToDomain();
+    }
+        
+    
+    public async Task<IEnumerable<Appointment>> GetItemsList() =>
+        await _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain())
+            .ToListAsync();
+
+    public async Task<bool> Create(Appointment item)
+    {
+        await _dbSet.AddAsync(item.ToModel());
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Update(Appointment item)
+    public async Task<bool> Update(Appointment item)
     {
         _dbSet.Update(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var item = GetItem(id);
+        var item = await GetItem(id);
         if (item == default)
             return false;
 
         _dbSet.Remove(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public void Save()
+    public async void Save()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
 
-    public IEnumerable<Appointment> GetAppointments(int doctorId) =>
-        _dbSet.Where(item => item.DoctorId == doctorId).Select(item => item.ToDomain());
+    public async Task<IEnumerable<Appointment>> GetAppointments(int doctorId) =>
+        await _dbSet
+            .Where(item => item.DoctorId == doctorId)
+            .Select(item => item.ToDomain())
+            .ToListAsync();
 
 
-    public IEnumerable<DateTime> GetFreeAppointments(Specialty specialty)
+    public async Task<IEnumerable<DateTime>> GetFreeAppointments(Specialty specialty)
     {
         var spec = specialty.ToModel();
         var doctors = _context.Doctors
             .AsNoTracking()
             .Where(doc => doc.SpecialtyId == spec.Id)
             .Select(doc => doc.ToDomain());
-        return _dbSet
+        return await _dbSet
             .AsNoTracking()
             .Where(item => item.StartTime > DateTime.Now && doctors.Any(doc
             => doc.Id == item.DoctorId))
-            .Select(it => it.StartTime);
+            .Select(it => it.StartTime)
+            .ToListAsync();
     }
 }

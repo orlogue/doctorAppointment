@@ -17,51 +17,56 @@ public class SpecialtyRepository : ISpecialtyRepository
         _dbSet = context.Specialties;
     }
 
-    public Specialty? GetItem(int id) =>
-        _dbSet
-            .AsNoTracking()
-            .FirstOrDefault(item => item.Id == id)?.ToDomain();
-
-    public IEnumerable<Specialty> GetItemsList() =>
-        _dbSet
-            .AsNoTracking()
-            .Select(item => item.ToDomain());
-
-    public bool Create(Specialty item)
+    public async Task<Specialty?> GetItem(int id)
     {
-        _dbSet.Add(item.ToModel());
-        Save();
+        var schedule = await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == id);
+        return schedule?.ToDomain();
+    }
+
+    public async Task<IEnumerable<Specialty>> GetItemsList() =>
+        await _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain())
+            .ToListAsync();
+
+    public async Task<bool> Create(Specialty item)
+    {
+        await _dbSet.AddAsync(item.ToModel());
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Update(Specialty item)
+    public async Task<bool> Update(Specialty item)
     {
         _dbSet.Update(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var item = GetItem(id);
+        var item = await GetItem(id);
         if (item == default)
             return false;
 
         _dbSet.Remove(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public void Save()
+    public async void Save()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public Specialty? GetByName(string name) =>
-        _dbSet
+    public async Task<Specialty?> GetByName(string name)
+    {
+        var specialty = await _dbSet
             .AsNoTracking()
-            .FirstOrDefault(
-            it => it.Name.ToLower()
-            .Contains(name.ToLower()))
-            ?.ToDomain();
+            .FirstOrDefaultAsync(
+            it => it.Name.ToLower().Contains(name.ToLower()));
+        return specialty?.ToDomain();
+    }
 }

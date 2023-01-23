@@ -1,10 +1,31 @@
 using database;
 using database.Repositories;
+using doctorAppointments.JWT;
 using domain.Logic.Interfaces;
 using domain.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = AuthOptions.ISSUER,
+            ValidateAudience = true,
+            ValidAudience = AuthOptions.AUDIENCE,
+            ValidateLifetime = true,
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey = true,
+        };
+    });
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql($"Host=localhost;Port=5432;Database=hospital;Username=hospital_user;Password=hospital_user_password"));
@@ -27,8 +48,22 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Hospital API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    option.OperationFilter<AuthenticationRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -42,5 +77,7 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.Run();

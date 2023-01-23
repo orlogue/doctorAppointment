@@ -4,6 +4,6 @@ namespace domain.Logic.Interfaces;
 
 public interface IUserRepository : IRepository<User>
 {
-    User? GetUserByLogin(string login);
-    bool DoesUserExist(string username);
+    Task<User?> GetUserByLogin(string login);
+    Task<bool> DoesUserExist(string username);
 }

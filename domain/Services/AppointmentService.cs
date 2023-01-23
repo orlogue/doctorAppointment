@@ -13,7 +13,7 @@ public class AppointmentService
 		_db = db;
 	}
 
-    public Result<Appointment> SaveAppointment(Schedule schedule,
+    public async Task<Result<Appointment>> SaveAppointment(Schedule schedule,
         Appointment appointment)
     {
         var result = schedule.IsValid();
@@ -28,7 +28,7 @@ public class AppointmentService
             schedule.WorkdayEndTime < appointment.EndTime)
             return Result.Fail<Appointment>("Appointment out of schedule");
 
-        var appointmentsList = _db.GetAppointments(appointment.DoctorId).ToList();
+        var appointmentsList = (await _db.GetAppointments(appointment.DoctorId)).ToList();
         appointmentsList.Sort((a, b) => {
             return  b.StartTime < a.StartTime ? 1 : -1 ;
         });
@@ -42,12 +42,12 @@ public class AppointmentService
                 return Result.Fail<Appointment>("This time already taken");
         }
 
-        return _db.Create(appointment) ? Result.Ok(appointment) :
+        return await _db.Create(appointment) ? Result.Ok(appointment) :
             Result.Fail<Appointment>("Unable to save the appointment");
 
     }
 
-    public Result<IEnumerable<DateTime>> GetFreeAppointments(Specialty
+    public async Task<Result<IEnumerable<DateTime>>> GetFreeAppointments(Specialty
         specialty)
     {
         var result = specialty.IsValid();
@@ -55,6 +55,6 @@ public class AppointmentService
             return Result.Fail<IEnumerable<DateTime>>
                 ("Invalid specialization: " + result.Error.ToLower());
 
-        return Result.Ok(_db.GetFreeAppointments(specialty));
+        return Result.Ok(await _db.GetFreeAppointments(specialty));
     }
 }

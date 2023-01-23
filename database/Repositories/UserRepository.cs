@@ -17,57 +17,61 @@ public class UserRepository : IUserRepository
         _dbSet = context.Users;
     }
 
-    public User? GetItem(int id) =>
-        _dbSet
-            .AsNoTracking()
-            .FirstOrDefault(item => item.Id == id)
-            ?.ToDomain();
-
-    public IEnumerable<User> GetItemsList() =>
-        _dbSet
-            .AsNoTracking()
-            .Select(item => item.ToDomain());
-
-    public bool Create(User item)
+    public async Task<User?> GetItem(int id)
     {
-        _dbSet.Add(item.ToModel());
-        Save();
+        var user = await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(item => item.Id == id);
+        return user?.ToDomain();
+    }
+
+    public async Task<IEnumerable<User>> GetItemsList() =>
+        await _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain()).ToListAsync();
+
+    public async Task<bool> Create(User item)
+    {
+        await _dbSet.AddAsync(item.ToModel());
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Update(User item)
+    public async Task<bool> Update(User item)
     {
         _dbSet.Update(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var item = GetItem(id);
+        var item = await GetItem(id);
         if (item == default)
             return false;
 
         _dbSet.Remove(item.ToModel());
-        Save();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public void Save()
+    public async void Save()
     {
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public User? GetUserByLogin(string login) =>
-        _dbSet
+    public async Task<User?> GetUserByLogin(string login)
+    {
+        var user = await _dbSet
             .AsNoTracking()
-            .FirstOrDefault(user => user.Username.ToLower() == login.ToLower())
-            ?.ToDomain();
+            .FirstOrDefaultAsync(user => user.Username.ToLower() == login.ToLower());
+        return user?.ToDomain();
+    }
 
-    public bool DoesUserExist(string username) =>
-        _dbSet
+    public async Task<bool> DoesUserExist(string username) =>
+        await _dbSet
         .AsNoTracking()
-        .Any(user => user.Username.ToLower() == username.ToLower())
+        .AnyAsync(user => user.Username.ToLower() == username.ToLower())
         ? true
         : false;
 }
