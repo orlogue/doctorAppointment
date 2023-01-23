@@ -5,7 +5,6 @@ using domain.Logic.Interfaces;
 using domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -62,7 +61,21 @@ builder.Services.AddSwaggerGen(option =>
         Scheme = "Bearer"
     });
 
-    option.OperationFilter<AuthenticationRequirementsOperationFilter>();
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer",
+
+                }
+            },
+            new string[]{}
+        }
+    });
 });
 
 var app = builder.Build();
