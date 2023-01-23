@@ -5,7 +5,7 @@ public class DoctorTests
     [Fact]
     public void CreateDoctor_Success()
     {
-        var doctor = new Doctor(0, "a", new Specialty(1, "a"));
+        var doctor = new Doctor(0, "a", 0);
 
         Assert.True(doctor.IsValid().Success);
     }
@@ -13,7 +13,7 @@ public class DoctorTests
     [Fact]
     public void DoctorIdError_Fail()
     {
-        var doctor = new Doctor(-1, "a", new Specialty(1, "a"));
+        var doctor = new Doctor(-1, "a", 0);
         var res = doctor.IsValid();
 
         Assert.True(res.IsFailure);
@@ -23,7 +23,7 @@ public class DoctorTests
     [Fact]
     public void FullNameError_Fail()
     {
-        var doctor = new Doctor(0, "", new Specialty(1, "a"));
+        var doctor = new Doctor(0, "", 0);
         var res = doctor.IsValid();
 
         Assert.True(res.IsFailure);
@@ -33,10 +33,10 @@ public class DoctorTests
     [Fact]
     public void SpecialtyError_Fail()
     {
-        var doctor = new Doctor(0, "a", new Specialty());
+        var doctor = new Doctor(0, "a", -1);
         var res = doctor.IsValid();
 
         Assert.True(res.IsFailure);
-        Assert.Contains("Invalid specialty: ", res.Error);
+        Assert.Equal("Invalid specialty id", res.Error);
     }
 }

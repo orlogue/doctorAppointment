@@ -3,5 +3,5 @@ namespace domain.Logic.Interfaces;
 
 public interface IScheduleRepository : IRepository<Schedule>
 {
-    IEnumerable<Schedule> GetScheduleByDoctor(Doctor doctor);
+    IEnumerable<Schedule> GetScheduleByDoctor(int id);
 }

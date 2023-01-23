@@ -22,7 +22,6 @@ public static class AppointmentModelConverter
     {
         return new AppointmentModel
         {
-            Id = model.Id,
             PatientId = model.PatientId,
             DoctorId = model.DoctorId,
             StartTime = model.StartTime,

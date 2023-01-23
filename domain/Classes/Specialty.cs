@@ -3,8 +3,8 @@ namespace domain.Classes;
 
 public class Specialty
 {
-    public int Id;
-    public string Name;
+    public int Id { get; set; }
+    public string Name { get; set; }
 
     public Specialty() : this(0, "") {}
 

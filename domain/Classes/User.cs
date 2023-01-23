@@ -4,13 +4,13 @@ namespace domain.Classes;
 
 public class User
 {
-    public Int64 Id;
-    public string PhoneNumber;
-    public string FullName;
-    public Role Role;
+    public Int64 Id { get; set; }
+    public string PhoneNumber { get; set; }
+    public string FullName { get; set; }
+    public Role Role { get; set; }
 
-    public string Username;
-    public string Password;
+    public string Username { get; set; }
+    public string Password { get; set; }
 
     public User() : this(0, "", "", Role.Patient, "", "") {}
     

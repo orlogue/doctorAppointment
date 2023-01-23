@@ -6,3 +6,5 @@ riderModule.iml
 .idea/
 doctorAppointments.sln.DotSettings.user
 .vs/
+database/Converters/ModelConverter.cs
+database/Models/IModel.cs

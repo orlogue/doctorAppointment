@@ -2,6 +2,8 @@
 using domain.Logic.Interfaces;
 using domain.Classes;
 
+namespace domain.Services;
+
 public class ScheduleService
 {
 	private readonly IScheduleRepository _db;
@@ -17,7 +19,7 @@ public class ScheduleService
 			return Result.Fail<IEnumerable<Schedule>>("Invalid doctor: "
 				+ doctorResult.Error.ToLower());
 
-		return Result.Ok(_db.GetScheduleByDoctor(doctor));
+		return Result.Ok(_db.GetScheduleByDoctor(doctor.Id));
 	}
 
 	public Result CreateSchedule(Schedule schedule)

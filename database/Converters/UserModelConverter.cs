@@ -22,7 +22,6 @@ public static class UserModelConverter
     {
         return new UserModel
         {
-            Id = model.Id,
             PhoneNumber = model.PhoneNumber,
             FullName = model.FullName,
             Role = model.Role,

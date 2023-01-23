@@ -1,6 +1,7 @@
 ﻿using domain.Classes;
 using domain.Logic;
 using domain.Logic.Interfaces;
+
 namespace domain.Services;
 
 public class AppointmentService

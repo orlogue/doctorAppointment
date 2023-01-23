@@ -18,10 +18,15 @@ public class UserRepository : IUserRepository
     }
 
     public User? GetItem(int id) =>
-        _dbSet.FirstOrDefault(item => item.Id == id)?.ToDomain();
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(item => item.Id == id)
+            ?.ToDomain();
 
     public IEnumerable<User> GetItemsList() =>
-        _dbSet.Select(item => item.ToDomain());
+        _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain());
 
     public bool Create(User item)
     {
@@ -54,8 +59,15 @@ public class UserRepository : IUserRepository
     }
 
     public User? GetUserByLogin(string login) =>
-        _dbSet.FirstOrDefault(user => user.Username == login)?.ToDomain();
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(user => user.Username.ToLower() == login.ToLower())
+            ?.ToDomain();
 
     public bool DoesUserExist(string username) =>
-        _dbSet.Any(user => user.Username == username) ? true : false;
+        _dbSet
+        .AsNoTracking()
+        .Any(user => user.Username.ToLower() == username.ToLower())
+        ? true
+        : false;
 }
