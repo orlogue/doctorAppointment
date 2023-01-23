@@ -7,4 +7,5 @@ riderModule.iml
 doctorAppointments.sln.DotSettings.user
 .vs/
 database/Converters/ModelConverter.cs
+database/Repositories/Repository.cs
 database/Models/IModel.cs
