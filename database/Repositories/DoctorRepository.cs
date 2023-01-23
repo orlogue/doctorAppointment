@@ -18,10 +18,13 @@ public class DoctorRepository : IDoctorRepository
     }
 
     public Doctor? GetItem(int id) =>
-        _dbSet.FirstOrDefault(item => item.Id == id)?.ToDomain();
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(item => item.Id == id)
+            ?.ToDomain();
 
     public IEnumerable<Doctor> GetItemsList() =>
-        _dbSet.Select(item => item.ToDomain());
+        _dbSet.AsNoTracking().Select(item => item.ToDomain());
 
     public bool Create(Doctor item)
     {
@@ -53,9 +56,12 @@ public class DoctorRepository : IDoctorRepository
         _context.SaveChanges();
     }
 
-    public IEnumerable<Doctor?> FindDoctorsBySpecialty(Specialty specialty) =>
-        _dbSet.Where(doc => doc.Specialty == specialty.ToModel()).Select(it => it.ToDomain());
+    public IEnumerable<Doctor?> FindDoctorsBySpecialty(int specialtyId) =>
+        _dbSet
+            .AsNoTracking()
+            .Where(doc => doc.SpecialtyId == specialtyId)
+            .Select(it => it.ToDomain());
 
-    public Doctor? FindDoctor(Specialty specialty) =>
-        _dbSet.FirstOrDefault(doc => doc.Specialty == specialty.ToModel())?.ToDomain();
+    public Doctor? FindDoctor(int specialtyId) =>
+        _dbSet.FirstOrDefault(doc => doc.SpecialtyId == specialtyId)?.ToDomain();
 }

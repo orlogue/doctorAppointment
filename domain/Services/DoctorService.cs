@@ -2,6 +2,8 @@
 using domain.Logic;
 using domain.Classes;
 
+namespace domain.Services;
+
 public class DoctorService
 {
 	private readonly IDoctorRepository _db;
@@ -15,25 +17,22 @@ public class DoctorService
         return Result.Ok(_db.GetItemsList());
     }
 
-	public Result<IEnumerable<Doctor?>> FindDoctorsBySpecialty(Specialty specialty)
+	public Result<IEnumerable<Doctor?>> FindDoctorsBySpecialty(int specialtyId)
 	{
-		var specialtyRes = specialty.IsValid();
-		if (specialtyRes.IsFailure)
-			return Result.Fail<IEnumerable<Doctor?>>("Invalid specialty: " + specialtyRes.Error);
+        if (specialtyId < 0)
+            return Result.Fail<IEnumerable<Doctor?>>("Invalid specialty id");
 
-		var res = _db.FindDoctorsBySpecialty(specialty);
+        var res = _db.FindDoctorsBySpecialty(specialtyId);
 		return res is not null ? Result.Ok(res)
 			: Result.Fail<IEnumerable<Doctor?>>("Unable to find doctor");
 	}
 
-    public Result<Doctor> FindDoctor(Specialty specialty)
+    public Result<Doctor> FindDoctor(int specialtyId)
     {
-		var specialtyResult = specialty.IsValid();
-		if (specialtyResult.IsFailure)
-			return Result.Fail<Doctor>("Invalid specialty: "
-				+ specialtyResult.Error.ToLower());
+		if (specialtyId < 0)
+			return Result.Fail<Doctor>("Invalid specialty id");
 
-        var doctor = _db.FindDoctor(specialty);
+        var doctor = _db.FindDoctor(specialtyId);
         return doctor != null ? Result.Ok(doctor)
             : Result.Fail<Doctor>("Unable to find doctor");
     }

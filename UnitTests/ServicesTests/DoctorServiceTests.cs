@@ -16,8 +16,8 @@ public class DoctorServiceTests
     {
         List<Doctor> doctors = new()
             {
-                new Doctor(0, "a", new Specialty(0, "a")),
-                new Doctor(1, "aa", new Specialty(0, "a"))
+                new Doctor(0, "a", 0),
+                new Doctor(1, "aa", 0)
             };
         IEnumerable<Doctor> d = doctors;
         _doctorRepositoryMock.Setup(rep => rep.GetItemsList()).Returns(() => d);
@@ -30,7 +30,7 @@ public class DoctorServiceTests
     {
         _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
-            .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
+            .Returns(() => new Doctor(0, "a", 0));
 
         Assert.True(_doctorService.GetItem(0).Success);
     }
@@ -53,16 +53,16 @@ public class DoctorServiceTests
     {
         _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
             It
-            .IsAny<Specialty>()))
-            .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
+            .IsAny<int>()))
+            .Returns(() => new Doctor(0, "a", 0));
 
-        Assert.True(_doctorService.FindDoctor(new Specialty(0, "a")).Success);
+        Assert.True(_doctorService.FindDoctor(0).Success);
     }
 
     [Fact]
     public void FindDoctorBySpecialty_InvalidSpecialty_Fail()
     {
-        var res = _doctorService.FindDoctor(new Specialty(-1, "a"));
+        var res = _doctorService.FindDoctor(-1);
 
         Assert.True(res.IsFailure);
         Assert.Contains("Invalid specialty", res.Error);
@@ -72,10 +72,10 @@ public class DoctorServiceTests
     public void FindDoctorBySpecialty_Fail()
     {
         _doctorRepositoryMock.Setup(rep => rep.FindDoctor(
-            It.IsAny<Specialty>()))
+            It.IsAny<int>()))
             .Returns(() => null);
 
-        var res = _doctorService.FindDoctor(new Specialty(0, "a"));
+        var res = _doctorService.FindDoctor(0);
 
         Assert.True(res.IsFailure);
         Assert.Equal("Unable to find doctor", res.Error);
@@ -88,7 +88,7 @@ public class DoctorServiceTests
             It.IsAny<Doctor>()))
             .Returns(() => true);
 
-        var doctor = new Doctor(0, "a", new Specialty(0, "a"));
+        var doctor = new Doctor(0, "a", 0);
         var res = _doctorService.Create(doctor);
 
         Assert.True(res.Success);
@@ -111,7 +111,7 @@ public class DoctorServiceTests
             It.IsAny<Doctor>()))
             .Returns(() => false);
 
-        var doctor = new Doctor(0, "a", new Specialty(0, "a"));
+        var doctor = new Doctor(0, "a", 0);
         var result = _doctorService.Create(doctor);
 
         Assert.True(result.IsFailure);
@@ -124,7 +124,7 @@ public class DoctorServiceTests
     {
         _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
-            .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
+            .Returns(() => new Doctor(0, "a", 0));
         _doctorRepositoryMock.Setup(rep => rep.Delete(
             It.IsAny<int>()))
             .Returns(() => true);
@@ -159,7 +159,7 @@ public class DoctorServiceTests
     {
         _doctorRepositoryMock.Setup(rep => rep.GetItem(
             It.IsAny<int>()))
-            .Returns(() => new Doctor(0, "a", new Specialty(0, "a")));
+            .Returns(() => new Doctor(0, "a", 0));
         _doctorRepositoryMock.Setup(rep => rep.Delete(
             It.IsAny<int>()))
             .Returns(() => false);

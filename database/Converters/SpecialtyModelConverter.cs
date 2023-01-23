@@ -18,7 +18,6 @@ public static class SpecialtyModelConverter
     {
         return new SpecialtyModel
         {
-            Id = model.Id,
             Name = model.Name
         };
     }

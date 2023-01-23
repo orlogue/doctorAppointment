@@ -53,6 +53,8 @@ public class ScheduleRepository : IScheduleRepository
         _context.SaveChanges();
     }
 
-    public IEnumerable<Schedule> GetScheduleByDoctor(Doctor doctor) =>
-        _dbSet.Where(it => it.DoctorId == doctor.Id).Select(it => it.ToDomain());
+    public IEnumerable<Schedule> GetScheduleByDoctor(int doctorId) =>
+        _dbSet
+            .Where(it => it.DoctorId == doctorId)
+            .Select(it => it.ToDomain());
 }

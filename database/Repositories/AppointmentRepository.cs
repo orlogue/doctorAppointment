@@ -1,8 +1,9 @@
-﻿using domain.Logic.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+
+using domain.Logic.Interfaces;
 using domain.Classes;
 using database.Models;
 using database.Converters;
-using Microsoft.EntityFrameworkCore;
 
 namespace database.Repositories;
 
@@ -18,10 +19,15 @@ public class AppointmentRepository : IAppointmentRepository
     }
 
     public Appointment? GetItem(int id) =>
-        _dbSet.FirstOrDefault(item => item.Id == id)?.ToDomain();
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(item => item.Id == id)
+            ?.ToDomain();
 
     public IEnumerable<Appointment> GetItemsList() =>
-        _dbSet.Select(item => item.ToDomain());
+        _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain());
 
     public bool Create(Appointment item)
     {
@@ -61,9 +67,14 @@ public class AppointmentRepository : IAppointmentRepository
     public IEnumerable<DateTime> GetFreeAppointments(Specialty specialty)
     {
         var spec = specialty.ToModel();
-        var doctors = _context.Doctors.Where(doc => doc.Specialty == spec)
+        var doctors = _context.Doctors
+            .AsNoTracking()
+            .Where(doc => doc.SpecialtyId == spec.Id)
             .Select(doc => doc.ToDomain());
-        return _dbSet.Where(item => item.StartTime > DateTime.Now && doctors.Any(doc
-            => doc.Id == item.DoctorId)).Select(it => it.StartTime);
+        return _dbSet
+            .AsNoTracking()
+            .Where(item => item.StartTime > DateTime.Now && doctors.Any(doc
+            => doc.Id == item.DoctorId))
+            .Select(it => it.StartTime);
     }
 }

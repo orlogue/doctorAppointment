@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace database.Repositories;
 
-public class SpecialtyRepository : IRepository<Specialty>
+public class SpecialtyRepository : ISpecialtyRepository
 {
     private readonly ApplicationContext _context;
     private readonly DbSet<SpecialtyModel> _dbSet;
@@ -18,14 +18,18 @@ public class SpecialtyRepository : IRepository<Specialty>
     }
 
     public Specialty? GetItem(int id) =>
-        _dbSet.FirstOrDefault(item => item.Id == id)?.ToDomain();
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(item => item.Id == id)?.ToDomain();
 
     public IEnumerable<Specialty> GetItemsList() =>
-        _dbSet.Select(item => item.ToDomain());
+        _dbSet
+            .AsNoTracking()
+            .Select(item => item.ToDomain());
 
     public bool Create(Specialty item)
     {
-        _dbSet.AddAsync(item.ToModel());
+        _dbSet.Add(item.ToModel());
         Save();
         return true;
     }
@@ -52,4 +56,12 @@ public class SpecialtyRepository : IRepository<Specialty>
     {
         _context.SaveChanges();
     }
+
+    public Specialty? GetByName(string name) =>
+        _dbSet
+            .AsNoTracking()
+            .FirstOrDefault(
+            it => it.Name.ToLower()
+            .Contains(name.ToLower()))
+            ?.ToDomain();
 }

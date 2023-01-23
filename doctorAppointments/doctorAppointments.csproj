@@ -6,4 +6,38 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <None Remove="Controllers\" />
+      <None Remove="Swashbuckle.AspNetCore" />
+      <None Remove="Views\" />
+      <None Remove="Microsoft.EntityFrameworkCore" />
+      <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+      <None Remove="Microsoft.EntityFrameworkCore.Design" />
+      <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+      <Folder Include="Views\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\domain\domain.csproj">
+        <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+      </ProjectReference>
+      <ProjectReference Include="..\database\database.csproj">
+        <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+      </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.2">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.1" />
+    </ItemGroup>
 </Project>

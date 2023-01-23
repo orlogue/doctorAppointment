@@ -4,10 +4,10 @@ namespace domain.Classes;
 
 public class Schedule
 {
-    public int Id;
-    public int DoctorId;
-    public DateTime WorkdayStartTime;
-    public DateTime WorkdayEndTime;
+    public int Id { get; set; }
+    public int DoctorId { get; set; }
+    public DateTime WorkdayStartTime { get; set; }
+    public DateTime WorkdayEndTime { get; set; }
 
     public Schedule() : this(0, 0, DateTime.MinValue, DateTime.MinValue) {}
 

@@ -20,7 +20,6 @@ public static class ScheduleModelConverter
     {
         return new ScheduleModel
         {
-            Id = model.Id,
             DoctorId = model.DoctorId,
             WorkdayStartTime = model.WorkdayStartTime,
             WorkdayEndTime = model.WorkdayEndTime

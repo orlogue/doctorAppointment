@@ -3,11 +3,11 @@ namespace domain.Classes;
 
 public class Appointment
 {
-    public Int64 Id;
-    public Int64 PatientId;
-    public int DoctorId;
-    public DateTime StartTime;
-    public DateTime EndTime;
+    public Int64 Id { get; set; }
+    public Int64 PatientId { get; set; }
+    public int DoctorId { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
 
     public Appointment() : this(0, 0, 0, DateTime.MinValue, DateTime.MinValue) {}
 

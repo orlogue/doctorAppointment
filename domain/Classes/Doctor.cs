@@ -5,17 +5,17 @@ namespace domain.Classes;
 
 public class Doctor
 {
-    public int Id;
-    public string FullName;
-    public Specialty Specialty;
+    public int Id { get; set; }
+    public string FullName { get; set; }
+    public int SpecialtyId { get; set; }
 
-    public Doctor() : this(0, "", new Specialty()) {}
+    public Doctor() : this(0, "", 0) {}
 
-    public Doctor(int id, string fullName, Specialty specialty)
+    public Doctor(int id, string fullName, int specialtyId)
     {
         Id = id;
         FullName = fullName;
-        Specialty = specialty;
+        SpecialtyId = specialtyId;
     }
 
     public Result IsValid()
@@ -26,10 +26,8 @@ public class Doctor
         if (string.IsNullOrEmpty(FullName))
             return Result.Fail("Invalid full name");
 
-        var res = Specialty.IsValid();
-
-        if (res.IsFailure)
-            return Result.Fail("Invalid specialty: " + res.Error.ToLower());
+        if (SpecialtyId < 0)
+            return Result.Fail("Invalid specialty id");
 
         return Result.Ok();
     }

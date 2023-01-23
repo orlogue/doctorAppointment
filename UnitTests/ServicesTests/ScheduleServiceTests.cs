@@ -22,7 +22,7 @@ public class ScheduleServiceTests
         IEnumerable<Schedule> schedules = sch;
 
         _scheduleRepositoryMock.Setup(rep => rep.GetScheduleByDoctor(
-            It.IsAny<Doctor>()))
+            It.IsAny<int>()))
             .Returns(() => schedules);
 
         var res = _scheduleService.GetSchedule(
